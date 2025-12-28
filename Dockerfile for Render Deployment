@@ -1,0 +1,20 @@
+# Use the official lightweight Python image
+FROM python:3.11-slim
+
+# Install system dependencies, including FFmpeg which is essential for video processing
+RUN apt-get update && \
+    apt-get install -y ffmpeg && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Copy the requirements file and install Python dependencies
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the application code
+COPY telegram_encoding_bot.py ./
+
+# Define the default command to run the application (overridden by Procfile on Render)
+CMD ["python", "telegram_encoding_bot.py"]
